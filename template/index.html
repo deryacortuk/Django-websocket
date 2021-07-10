@@ -1,0 +1,57 @@
+  
+<html>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script>
+
+    let socket =new WebSocket('ws://localhost:8000/ws/data/');
+    socket.onopen =function(event){
+        alert('Connection established');
+    };
+
+    socket.onmessage = function(event){
+        console.log(event.data);
+        var recData=JSON.parse(event.data);
+        dataObjNew=dataObject['data']['datasets'][0]['data'];
+        dataObjNew.shift();
+        dataObjNew.push(recData.value);
+        dataObject['data']['datasets'][0]['data']=dataObjNew;
+        window.myLine.update();
+
+    };
+
+    socket.onclose = function(event){
+        alert('Connection CLosed');
+    };
+    
+    </script>
+<body>
+    <div style="max-width: 900px; max-height: 400px;">
+        <canvas id="Chart" width="900" height="500"></canvas>
+    </div>
+</body>
+    
+    <script>
+    var dataObject={
+        type: 'line',
+        data: {
+            labels: [1,2,3,4,5,6,7,8,9,10,11,12],
+            datasets: [{
+                label: 'websocket practice',
+                data: [17, 19, 3, 5, 2, 3,1,6,8,4,7,13,15],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    }
+    var context = document.getElementById('Chart').getContext('2d');
+    window.myLine = new Chart(context,dataObject );
+    </script>
+</html>
