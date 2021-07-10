@@ -1,5 +1,5 @@
 # Django-websocket
-Channels
+
 
 -Django version 3.2.4
 
